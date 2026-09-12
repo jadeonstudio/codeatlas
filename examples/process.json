@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "revision": 0,
+  "project": {"id":"example-process","name":"이벤트 처리 파이프라인","demo":true},
+  "analysis": {"status":"partial","summary":"화면 없는 프로그램의 표현 예시입니다.","agent":"예시 에이전트","updatedAt":"2026-09-12T12:00:00.000Z","coverage":{"examined":["이벤트 수신 → 처리 → 결과 저장"],"excluded":[],"unknown":["실제 실행·장애 복구"]}},
+  "nodes": [
+    {"id":"input","kind":"interface","label":"이벤트 수신","confidence":"inferred","evidenceIds":["example"]},
+    {"id":"queue","kind":"resource","label":"처리 대기열","confidence":"inferred","evidenceIds":["example"]},
+    {"id":"worker","kind":"process","label":"작업 처리","confidence":"inferred","evidenceIds":["example"]},
+    {"id":"result","kind":"data","label":"결과 저장","confidence":"inferred","evidenceIds":["example"]}
+  ],
+  "edges": [
+    {"id":"e1","source":"input","target":"queue","relation":"uses","confidence":"inferred","evidenceIds":["example"]},
+    {"id":"e2","source":"queue","target":"worker","relation":"uses","confidence":"inferred","evidenceIds":["example"]},
+    {"id":"e3","source":"worker","target":"result","relation":"uses","confidence":"inferred","evidenceIds":["example"]}
+  ],
+  "evidence": [
+    {"id":"example","kind":"inference","summary":"기술 스택에 종속되지 않는 프로세스 설명 예시입니다."}
+  ],
+  "views": [
+    {"id":"pipeline","label":"이벤트 처리 흐름","mode":"process","nodeIds":["input","queue","worker","result"]}
+  ],
+  "reports": []
+}

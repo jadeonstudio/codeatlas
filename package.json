@@ -1,0 +1,18 @@
+{
+  "name": "@jadeonstudio/codeatlas",
+  "version": "0.1.0",
+  "description": "Agent-owned software understanding, shared Korean visual context. No model API, no source analyzer.",
+  "type": "module",
+  "private": true,
+  "bin": {"codeatlas": "bin/codeatlas.mjs"},
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "demo": "node bin/codeatlas.mjs demo",
+    "start": "node bin/codeatlas.mjs serve",
+    "pack:check": "npm pack --dry-run"
+  },
+  "files": ["bin", "src", "web", "schemas", "skills", "docs", "examples", "README.md", "AGENTS.md", "CHANGELOG.md", "SECURITY.md"],
+  "license": "UNLICENSED"
+}

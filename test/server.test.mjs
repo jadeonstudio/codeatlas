@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import http from 'node:http';
+import {fixture} from './helpers.mjs';
+import {startServer} from '../src/server.mjs';
+async function serverFixture(t){const f=await fixture(t);const s=await startServer(f.store,{port:0,session:'browser'});t.after(s.close);return {...f,...s,headers:{Authorization:`Bearer ${s.token}`}};}
+test('static UI loads with CSP and no third party assets',async t=>{const s=await serverFixture(t);const r=await fetch(s.origin);assert.equal(r.status,200);assert.match(r.headers.get('content-security-policy'),/default-src 'self'/);assert.match(await r.text(),/lang="ko"/);});
+test('project graph requires authorization',async t=>{const s=await serverFixture(t);assert.equal((await fetch(s.origin+'/api/graph')).status,401);assert.equal((await fetch(s.origin+'/api/graph',{headers:s.headers})).status,200);});
+test('ETag returns 304 for unchanged graph',async t=>{const s=await serverFixture(t);const r=await fetch(s.origin+'/api/graph',{headers:s.headers});const r2=await fetch(s.origin+'/api/graph',{headers:{...s.headers,'If-None-Match':r.headers.get('etag')}});assert.equal(r2.status,304);});
+test('cross origin mutation is rejected',async t=>{const s=await serverFixture(t);const r=await fetch(s.origin+'/api/selection',{method:'POST',headers:{...s.headers,Origin:'https://hostile.invalid','Content-Type':'application/json'},body:'{}'});assert.equal(r.status,403);});
+test('DNS rebinding Host is rejected',async t=>{const s=await serverFixture(t);const status=await new Promise((resolve,reject)=>{const req=http.get(s.origin,{headers:{Host:'attacker.invalid'}},res=>{res.resume();resolve(res.statusCode);});req.on('error',reject);});assert.equal(status,403);});
+test('browser selection is readable by the agent CLI store',async t=>{const s=await serverFixture(t);const r=await fetch(s.origin+'/api/selection',{method:'POST',headers:{...s.headers,'Content-Type':'application/json'},body:JSON.stringify({session:'browser',nodeIds:['web.products'],graphRevision:1,viewId:'purchase',intent:'impact'})});assert.equal(r.status,200);assert.equal((await s.store.context('browser')).selection.intent,'impact');});
+test('invalid selection leaves old selection untouched',async t=>{const s=await serverFixture(t);await s.store.select('browser',{nodeIds:['web.home'],graphRevision:1});const r=await fetch(s.origin+'/api/selection',{method:'POST',headers:{...s.headers,'Content-Type':'application/json'},body:JSON.stringify({session:'browser',nodeIds:['bad'],graphRevision:1})});assert.equal(r.status,400);assert.deepEqual((await s.store.selection('browser')).nodeIds,['web.home']);});
+test('server does not expose arbitrary project files',async t=>{const s=await serverFixture(t);await fs.writeFile(path.join(s.dir,'.env'),'secret');for(const url of ['/.env','/src/server.mjs','/api/execute'])assert.equal((await fetch(s.origin+url,{headers:s.headers})).status,404);});
+test('non-JSON writes rejected',async t=>{const s=await serverFixture(t);assert.equal((await fetch(s.origin+'/api/selection',{method:'POST',headers:s.headers,body:'hi'})).status,415);});
+test('oversized selection body rejected',async t=>{const s=await serverFixture(t);const r=await fetch(s.origin+'/api/selection',{method:'POST',headers:{...s.headers,'Content-Type':'application/json'},body:JSON.stringify({huge:'x'.repeat(34000)})});assert.equal(r.status,413);});
+test('no public interface binding',async t=>{const s=await fixture(t);await assert.rejects(startServer(s.store,{host:'0.0.0.0'}),/loopback/);});
+test('history endpoint serves a saved snapshot',async t=>{const s=await serverFixture(t);const r=await fetch(s.origin+'/api/history?revision=0',{headers:s.headers});assert.equal(r.status,200);assert.equal((await r.json()).revision,0);});

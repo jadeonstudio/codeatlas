@@ -1,0 +1,6 @@
+interface:
+  display_name: "CodeAtlas · 소프트웨어 지도"
+  short_description: "프로젝트의 화면·기능·데이터 연결을 보고 선택한 부분을 에이전트와 함께 개선합니다."
+  default_prompt: "CodeAtlas 지침을 읽고 현재 프로젝트를 분석해 지도를 만들어줘. 이후에는 지도에서 선택한 대상을 기준으로 질문과 수정을 이어가자."
+policy:
+  allow_implicit_invocation: true

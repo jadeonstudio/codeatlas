@@ -58,3 +58,15 @@ python scripts/browser_check.py --url '<위 명령의 전체 URL>' --project '<�
 - [ ] 실제 사용자 프로젝트의 분석 누락과 잘못된 관계를 사람이 검토.
 
 구현된 경로와 실제 호스트에서 시험한 경로를 혼동하여 “모든 에이전트에서 검증 완료”라고 표현하지 않는다.
+
+## GitHub Actions 최초 실행
+
+구현 커밋 `04f6252f5951b42b61e10b12999610b855b8f7d4`를 main에 반영한 뒤 workflow run `34695489009`를 확인했다.
+
+- 실행 링크: https://github.com/jadeonstudio/codeatlas/actions/runs/34695489009
+- 원격 상태: failure. Windows/Node 24 job은 failure, 나머지 5개 조합은 cancelled.
+- 실패 job `103558140800`의 단계 목록은 비어 있고 로그 다운로드는 BlobNotFound였다. 따라서 checkout·설치·테스트가 실행됐다는 근거가 없다.
+- 실패 원인은 현재 접근 가능한 실행 정보로 확인하지 못했다. 계정/결제/실행기 문제라고 단정하거나 소스 테스트 실패로 바꾸어 표현하지 않는다.
+- 로컬 Linux의 64개 테스트 통과와 원격 CI 통과는 별개다. macOS/Windows 확인은 여전히 미완료다.
+
+이 기록만 추가한 후속 문서 커밋은 `[skip ci]`로 중복 실행을 생략한다. 실행 코드와 워크플로는 변경하지 않는다. 저장소 소유자는 위 실행 페이지의 annotation을 확인한 뒤 필요한 조치를 하고 전체 workflow를 다시 실행할 수 있다.

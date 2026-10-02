@@ -14,7 +14,7 @@ CodeAtlas는 **에이전트 지침 + 공통 그래프 규격 + 한글 시각화 
 
 ## 설치
 
-Node.js **22 이상**. 별도 npm 의존성 설치·API 키·회원가입은 필요 없습니다. 비공개 저장소 접근 권한은 별도로 필요합니다.
+Node.js **22 이상**. 별도 npm 의존성 설치·API 키·회원가입은 필요 없습니다.
 
 ```sh
 git clone https://github.com/jadeonstudio/codeatlas.git
@@ -107,4 +107,4 @@ node .codeatlas/runtime/bin/codeatlas.mjs uninstall
 
 그래프·이력·사용자 캡처는 제거하지 않습니다. CodeAtlas는 로컬 전용 패키지이며 마켓플레이스 등록·공개 호스팅·원격 tunnel을 포함하지 않습니다.
 
-현재 라이선스는 `UNLICENSED`입니다. 저장소 소유자가 공개 배포 정책을 결정하기 전 임의로 오픈소스 라이선스를 부여하지 않습니다.
+라이선스는 [MIT](LICENSE)입니다. npm 레지스트리에는 게시하지 않으며(`package.json`의 `private: true`), GitHub 저장소에서 직접 설치합니다.

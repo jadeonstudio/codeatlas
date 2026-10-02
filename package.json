@@ -13,6 +13,6 @@
     "start": "node bin/codeatlas.mjs serve",
     "pack:check": "npm pack --dry-run"
   },
-  "files": ["bin", "src", "web", "schemas", "skills", "docs", "examples", "README.md", "AGENTS.md", "CHANGELOG.md", "SECURITY.md"],
-  "license": "UNLICENSED"
+  "files": ["bin", "src", "web", "schemas", "skills", "docs", "examples", "README.md", "LICENSE", "AGENTS.md", "CHANGELOG.md", "SECURITY.md"],
+  "license": "MIT"
 }

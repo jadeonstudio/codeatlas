@@ -22,6 +22,23 @@
 | 실제 Codex / Claude / Grok 앱 | **미실행** | 이 환경에 해당 호스트 앱이 없어 직접 실행하지 않음 |
 | macOS / Windows 실제 실행 | **미실행** | CI 매트릭스를 제공하되 실제 실행 결과와 구분 |
 
+## 추가 실행 기록 — 2026-10-02
+
+0.1.0 코드에 대해 macOS에서 다시 실행한 결과다. 위 표의 "미실행" 항목 중 아래에 적은 범위만 확인했고, 나머지는 계속 미실행이다.
+
+| 항목 | 결과 | 실행 환경 / 의미 |
+|---|---|---|
+| `npm test` | **64/64 통과**, 실패·스킵 0 | macOS (Darwin) / Node.js 26.5.0 |
+| `npm run check` | **21개 검사 통과**, 런타임 의존성 0 | 동일 환경 |
+| `install --agents claude,generic` | 통과 | 빈 Git 프로젝트에 `.claude/skills/codeatlas`, `.codeatlas/`, `CLAUDE.md`·`AGENTS.md` 관리 블록 생성 확인 |
+| `doctor` | 통과 | 그래프 revision 0, 세션 상태 정상 |
+| `demo` + 실제 viewer | 통과 | Claude Code 데스크톱 앱의 내장 브라우저에서 한글 UI, 그래프, 상세 패널, "예시 프로젝트" 표시 렌더링 확인 |
+| 예제 그래프 게시 | 의도대로 거절 | 프로젝트 ID 불일치(`Project identity mismatch`)와 demo 플래그 변경(`Demo flag cannot silently change`)을 거절하고 기존 지도를 보존 |
+| 실제 프로젝트 적용 | 통과 | 개인 TypeScript 프로젝트(self-test 파일 597개, Kafka·PostgreSQL 사용)에 설치. 읽기 전용 조사 결과로 노드 27·관계 23·근거 23·보기 5를 작성해 검증·게시 성공 |
+| 선택 전달 | 일부 확인 | 흐름 보기에서 노드를 선택하면 `context --session`이 선택 노드·이웃·근거를 반환. 새로 고침 후 선택 복원 확인. 범주 목록 보기의 카드 클릭이 선택을 바꾸는지는 자동 클릭으로 재현하지 못했다(미확정) |
+
+아직 확인하지 않은 것: Codex·Grok 앱에서의 실제 설치, Windows 실제 실행, Claude 세션이 설치된 스킬을 자동 감지해 사용하는 흐름, 실제 AI 모델의 프로젝트 분석 정확도.
+
 ### 브라우저 검증의 정확한 범위
 
 이 환경의 Chromium은 관리자 정책으로 모든 URL 탐색이 차단된다. 해당 정책을 변경하거나 우회하지 않았다. `agent-browser`도 설치되어 있지 않다. 따라서 제공된 `scripts/browser_check.py --embedded`로 동일 HTML/CSS/JS를 빈 문서에 렌더링하고, Playwright 바인딩이 실제 localhost Node HTTP API에 요청을 전달하는 **DOM 테스트 하네스**를 사용했다. 브라우저 저장소도 해당 하네스에서는 메모리 구현으로 대체한다.
